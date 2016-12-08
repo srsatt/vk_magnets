@@ -1,0 +1,2 @@
+export const SET_FRIENDS = 'SET_FRIENDS'
+export const CLEAR_FRIENDS = 'CLEAR_FRIENDS'

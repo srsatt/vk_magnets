@@ -15,7 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from dashboard import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', views.index, name='index'),
+    url(r'^(?P<id>.*)/$', views.picker, name='picker'),
+    url(r'^friendspicker$', views.friendspicker, name='friendspicker'),
+    url(r'^receivefriends$', views.receivefriends, name='receivefriends'),
+    url(r'^django-rq/', include('django_rq.urls')),
+
 ]
