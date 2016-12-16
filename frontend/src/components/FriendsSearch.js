@@ -15,9 +15,10 @@ class SearchSuggestion extends React.Component {
   }
 render(){
   return (<a href="#" onClick={this.handleClick.bind(this)}>
-    <div className="suggestion">
+    <div className={this.props.selected.indexOf(this.props.person.text.id)>-1 ? 'suggestion':'suggestion deselected'}>
       <img src={this.props.person.text.photo_max} />
-      <p className='suggestion-name'> {this.props.person.text.first_name +" "+ this.props.person.text.last_name}</p>
+      <p className='suggestion-name'>
+        {this.props.person.text.first_name +" "+ this.props.person.text.last_name}</p>
     </div></a>);
 }
 }

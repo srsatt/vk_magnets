@@ -10,15 +10,11 @@ photo_format="photo_400_orig"
 def get_user_friends(user_id):
     import requests
     friends = requests.get(url='https://api.vk.com/method/friends.get?user_id=' + str(user_id) +
-            '&v=5.25&fields=sex,'+photo_format+",photo_max,photo_max_orig").json()['response']['items']
+            '&v=5.60&fields=sex,'+photo_format+",photo_100,photo_max,photo_max_orig").json()['response']['items']
     good=[]
     for f in friends:
-        #try:
         if not re.search(r'(camera|deactivated)',f['photo_max']):
-        #if f[photo_format]!='https://vk.com/images/deactivated_400.png' and f[photo_format]!='http://vk.com/images/camera_400.png':
             good.append(f)
-            #print f[photo_format]
-        #except KeyError:
             pass
     return good
 
@@ -55,63 +51,30 @@ def save_album_by_id(user_id):
 def save_album(friends=[],user_id=1):
     sheet_index=1
     sheets = []
-    small_pic = []
+    pics = []
     sheet = Image.new('RGB',(2480,3508),(255, 255, 255))
     sheet_index = 0
     dwg = svgwrite.Drawing(filename='sheets/{user_id}_{sheet_index}.svg'.format(user_id=user_id,sheet_index=sheet_index),size=(2480,3508))
-    shapes = dwg.add(dwg.g(id='shapes',fill='white'))
-    pointer = (0,0)
+    shapes = dwg.add(dwg.g(id='shapes'))
+    pointer = (90,144)
     for friend in friends:
         try:
-            response = requests.get(friend[photo_format])
+            response = requests.get(friend['photo_max'])
         except KeyError:
-            response = requests.get(friend['photo_max_orig'])
+            response = requests.get(friend['photo_100'])
         new_image = Image.open(StringIO(response.content))
-        #new_image = Image.open('pictures_400x400/{filename}'.format(filename=))
         w, h = new_image.size
+        print new_image.size
         #resizing part. new_image must be 400x400
-        if w==400 and h>400:
-            new_image = new_image.crop((0,0,400,400))
-        if new_image.size == (400,400):
-            if pointer[1] > 6:
-                if pointer[0] > 3:
-                    save_sheet(sheet=sheet,index=sheet_index,user_id=user_id)
-                    dwg.save()
-                    sheet_index += 1
-                    sheet = Image.new('RGB',(2480,3508),(255, 255, 255))
-                    dwg = svgwrite.Drawing(filename='sheets/{user_id}_{sheet_index}.svg'.format(user_id=user_id,sheet_index=sheet_index),size=(2480,3508))
-                    shapes = dwg.add(dwg.g(id='shapes',fill='white'))
-                    pointer = (0,0)
-                    box = (90+pointer[0]*460+30,144+pointer[1]*460+30,90+pointer[0]*460+430,144+pointer[1]*460+430)
-                    sheet.paste(new_image,box)
-                    shapes.add(dwg.rect(insert=(90+pointer[0]*460+30,144+pointer[1]*460+30), size=(400, 400), stroke='red', stroke_width=1))
-                    pointer = (0,1)
-                else:
-                    pointer = (pointer[0]+1,0)
-                    box = (90+pointer[0]*460+30,144+pointer[1]*460+30,90+pointer[0]*460+430,144+pointer[1]*460+430)
-                    shapes.add(dwg.rect(insert=(90+pointer[0]*460+30,144+pointer[1]*460+30), size=(400, 400), stroke='red', stroke_width=1))
-                    sheet.paste(new_image,box)
-                    pointer = (pointer[0],1)
-            else:
-                box = (90+pointer[0]*460+30,144+pointer[1]*460+30,90+pointer[0]*460+430,144+pointer[1]*460+430)
-                shapes.add(dwg.rect(insert=(90+pointer[0]*460+30,144+pointer[1]*460+30), size=(400, 400), stroke='red', stroke_width=1))
-                sheet.paste(new_image,box)
-                pointer = (pointer[0],pointer[1]+1)
-        elif w<400:
-            small_pic.append(new_image)
-    # save_sheet(sheet=sheet,index=sheet_index,user_id=user_id)
-    # dwg.save()
-    # sheet_index+=1
-    if small_pic:
-        # dwg = svgwrite.Drawing(filename='sheets/{user_id}_{sheet_index}.svg'.format(user_id=user_id,sheet_index=sheet_index),size=(2480,3508))
-        # shapes = dwg.add(dwg.g(id='shapes',fill='white'))
-        # sheet = Image.new('RGB',(2480,3508),(255, 255, 255))
-        pointer = (90+pointer[0]*460+30,144+pointer[1]*460+30)
-        rw = 400
-        for image in sorted(small_pic, key=lambda image: image.size[0], reverse=True):
+        # if w==400 and h>400:
+        #     new_image = new_image.crop((0,0,400,400))
+        new_image = new_image.resize((300,300))
+
+        pics.append(new_image)
+    if pics:
+        rw = 300
+        for image in sorted(pics, key=lambda image: image.size[0], reverse=True):
             w,h = image.size
-            # if pointer[1]==174:
-            #     rw = w #rh - row_height
             if pointer[1]+h > 3400:
                 if pointer[0]+rw+w> 2390:
                     save_sheet(sheet=sheet,index=sheet_index,user_id=user_id)
@@ -119,13 +82,13 @@ def save_album(friends=[],user_id=1):
                     sheet_index+=1
                     dwg = svgwrite.Drawing(filename='sheets/{user_id}_{sheet_index}.svg'.format(user_id=user_id,sheet_index=sheet_index),size=(2480,3508))
                     shapes = dwg.add(dwg.g(id='shapes',fill='white'))
-                    pointer = (120,174)
+                    pointer = (90,144)
                     sheet = Image.new('RGB',(2480,3508),(255, 255, 255))
                     sheet.paste(image,(pointer[0],pointer[1],pointer[0]+w,pointer[1]+h))
                     shapes.add(dwg.rect(insert=pointer, size=(w,h), stroke='red', stroke_width=1))
                     pointer = (pointer[0],pointer[1]+60+h)
                 else:
-                    pointer = (pointer[0]+60+rw,174)
+                    pointer = (pointer[0]+60+rw,144)
                     rw = w
                     sheet.paste(image,(pointer[0],pointer[1],pointer[0]+w,pointer[1]+h))
                     shapes.add(dwg.rect(insert=pointer, size=(w,h), stroke='red', stroke_width=1))
@@ -141,3 +104,8 @@ def save_album(friends=[],user_id=1):
 #save_album_by_id(7284083) #srsatt
 #save_album_by_id(1648387) #evgenity
 #get_user_friends(1648387)7284083
+
+# for f in get_user_friends(7284083):
+#     response = requests.get(f['photo_max'])
+#     new_image = Image.open(StringIO(response.content))
+#     print new_image.size

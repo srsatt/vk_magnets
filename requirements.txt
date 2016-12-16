@@ -1,0 +1,9 @@
+click==6.6
+Django==1.10.4
+django-rq==0.9.4
+Pillow==3.4.2
+pyparsing==2.1.10
+redis==2.10.5
+requests==2.12.3
+rq==0.7.0
+svgwrite==1.1.9

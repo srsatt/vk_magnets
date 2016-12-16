@@ -1,52 +1,18 @@
 /* Base Application Styles */
-body {
-  #color: #fff;
+/*body {
+  #color: #ddd;
   #background: #222;
-}
-
-.index img {
-  margin: 40px auto;
-  border-radius: 4px;
-  background: #fff;
-  display: block;
-}
-
-.index .notice {
-  margin: 20px auto;
-  padding: 15px 0;
-  text-align: center;
-  border: 1px solid #000;
-  border-width: 1px 0;
-  /*background: #666;*/
-}
-
-.friend{
-  float: left;
-  margin: 10px;
-  text-align: center;
-}
-.avatar{
-  width: 100px;
-  height: 100px;
-}
-.row{
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 20px;
-
-}
-.deselected{
-    opacity: 0.2;
-    filter: alpha(opacity=20); /* For IE8 and earlier */
+}*/
+body {
+  background-color: #ddd;
 }
 
 .suggestions{
   z-index: 1000;
   position: absolute;
-  top: 100px;
+  top: 140px;
+  width: auto;
   background-color: white;
-
-
 
 }
 .suggestion-name{
@@ -56,5 +22,32 @@ body {
 .suggestion img{
   width:40px;
   height: 40px;
+}
 
+.deselected{
+    opacity: 0.2;
+    filter: alpha(opacity=20); /* For IE8 and earlier */
+}
+.friend-names{
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+.friend{
+  display:inline-block;
+  /*float: left;*/
+  /*padding: 10px;
+  padding: 10px;*/
+  margin:0 10px;
+  margin: 10px;
+  width: 120px;
+  height: 120px;
+  background-color: white;
+}
+
+.avatar{
+  padding-top: 10px;
+  padding-left: 10px;
+  width: 100px;
+  height: 100px;
 }

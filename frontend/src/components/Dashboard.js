@@ -99,6 +99,8 @@ export default class Filter extends React.Component{
             <button onClick={this.selectAllFriends.bind(this)}>Select All</button>
             <button onClick={this.props.deselectAll}>Deselect All</button>
             <button onClick={this.sendFriendList.bind(this)}>Send Friend List</button>
+            <p>total friends selected: {this.props.selected.length}</p>
+            <p>total lists: {Math.ceil(this.props.selected.length/54)}</p>
             <FriendsSearch friends={this.props.friends} selected={this.props.selected} setFriends={this.props.setFriends} selectFriend={this.props.selectFriend} deselectFriend={this.props.deselectFriend}/>
 
           </div>)
